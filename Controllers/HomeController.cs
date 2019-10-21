@@ -1,6 +1,8 @@
+using System.Linq;
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http; // for session use 
-
+using RandomPasscode.Models;
 namespace RandomPasscode.Controllers
 {
     public class HomeController : Controller
@@ -8,16 +10,34 @@ namespace RandomPasscode.Controllers
         [HttpGet("")]
         public IActionResult Index()
         {
-            // Generate new random passcode
-            // Assign local variable for new passcode
-            // if current count is null, set count to 1
-                // int? count = 1;
-            // else increment+1
-                // int? count++;
-
-            //add the information into the viewbag
+            if(!HttpContext.Session.GetInt32("count").HasValue)
+            {
+                int currCount = (int) HttpContext.Session.GetInt32("count");
+                HttpContext.Session.SetInt32("count", 0);
+            }
 
             return View();
+        }
+
+        [HttpPost("newcode")]
+        public IActionResult NewCode()
+        {
+            Random r = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+            // Generate new random passcode
+            string newPassCode = new string(Enumerable.Repeat(chars, 14)
+                .Select(str => str[r.Next(str.Length)]).ToArray());
+
+            // Increment the count in session
+            int currCount = (int) HttpContext.Session.GetInt32("count");
+            HttpContext.Session.SetInt32("count", currCount++);
+
+            // Add the information into the viewbag
+            ViewBag.PassCode = newPassCode;
+            ViewBag.Count = currCount;
+
+            return RedirectToAction("Index");
         }
     }
 }
