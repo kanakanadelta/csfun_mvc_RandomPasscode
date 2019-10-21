@@ -15,6 +15,7 @@ namespace RandomPasscode
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession();
             services.AddMvc();
         }
 
@@ -26,6 +27,7 @@ namespace RandomPasscode
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSession();
             app.UseStaticFiles();
             app.UseMvc();
 
