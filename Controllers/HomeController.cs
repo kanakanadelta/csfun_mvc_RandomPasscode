@@ -12,9 +12,11 @@ namespace RandomPasscode.Controllers
         {
             if(!HttpContext.Session.GetInt32("count").HasValue)
             {
-                int currCount = (int) HttpContext.Session.GetInt32("count");
+                int? currCount = HttpContext.Session.GetInt32("count");
                 HttpContext.Session.SetInt32("count", 0);
             }
+
+
 
             return View();
         }
@@ -31,13 +33,16 @@ namespace RandomPasscode.Controllers
 
             // Increment the count in session
             int currCount = (int) HttpContext.Session.GetInt32("count");
-            HttpContext.Session.SetInt32("count", currCount++);
+            if(currCount != null)
+            currCount++;
+            HttpContext.Session.SetInt32("count", currCount);
+
 
             // Add the information into the viewbag
             ViewBag.PassCode = newPassCode;
             ViewBag.Count = currCount;
 
-            return RedirectToAction("Index");
+            return View("Index");
         }
     }
 }

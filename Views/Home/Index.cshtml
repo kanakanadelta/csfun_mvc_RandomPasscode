@@ -9,8 +9,11 @@
 </head>
 <body>
   <div id="main-container">
-    <h2>Random passcode #__</h2>
-    <form asp-action="" asp-controller="Home">
+    <h2>Random passcode #<span>@ViewBag.Count</span></h2>
+    <div>
+      <h1>@ViewBag.PassCode</h1>
+    </div>
+    <form asp-action="NewCode" asp-controller="Home">
       <input type="submit" value="Generate">
     </form>
   </div>
